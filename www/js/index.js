@@ -17,44 +17,64 @@
  * under the License.
  */
 
-		var a = document.getElementById("a");
-        var b = document.getElementById("b");
-        var c = document.getElementById("c");
-        
-        a.innerHTML = "1";
-        b.innerHTML = "2";
-		c.innerHTML = "3";
+
+	var a = document.getElementById("a");
+    var b = document.getElementById("b");
+    var c = document.getElementById("c");
+
+    // Wait for Cordova to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    // Populate the database 
+    //
+    function populateDB(tx) {
+        tx.executeSql('DROP TABLE IF EXISTS DEMO');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id unique, data)');
+        tx.executeSql('INSERT INTO DEMO (id, data) VALUES (1, "First row")');
+        tx.executeSql('INSERT INTO DEMO (id, data) VALUES (2, "Second row")');
+    }
+
+    // Query the database
+    //
+    function queryDB(tx) {
+        tx.executeSql('SELECT * FROM DEMO', [], querySuccess, errorCB);
+    }
+
+    // Query the success callback
+    //
+    function querySuccess(tx, results) {
+        a.innerHTML = results.rows.length;
+        // this will be true since it was a select statement and so rowsAffected was 0
+        if (!results.rowsAffected) {
+            a.innerHTML ='No rows affected!';
+            return false;
+        }
+        // for an insert statement, this property will return the ID of the last inserted row
+       c.innerHTML = "Last inserted row ID = " + results.insertId;
+    }
+
+    // Transaction error callback
+    //
+    function errorCB(err) {
+        console.log("Error processing SQL: "+err.code);
+    }
+
+    // Transaction success callback
+    //
+    function successCB() {
+        var db = window.openDatabase("Database", "1.0", "Cordova Demo", 200000);
+        db.transaction(queryDB, errorCB);
+    }
+
+    // Cordova is ready
+    //
+    function onDeviceReady() {
+        var db = window.openDatabase("Database", "1.0", "Cordova Demo", 200000);
+        db.transaction(populateDB, errorCB, successCB);
+    }
 
 
-// Wait for Cordova to load
-//
-document.addEventListener("deviceready", onDeviceReady, false);
 
-// Cordova is ready
-//
-function onDeviceReady() {
-    var db = window.openDatabase("Database", "1.0", "Cordova Demo", 200000);
-    db.transaction(populateDB, errorCB, successCB);
-}
-
-// Populate the database 
-//
-function populateDB(tx) {
-     tx.executeSql('DROP TABLE IF EXISTS DEMO');
-     tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id unique, data)');
-     tx.executeSql('INSERT INTO DEMO (id, data) VALUES (1, "First row")');
-     tx.executeSql('INSERT INTO DEMO (id, data) VALUES (2, "Second row")');
-}
-
-// Transaction error callback
-//
-function errorCB(tx, err) {
-    alert("Error processing SQL: "+err);
-}
-
-// Transaction success callback
-//
-function successCB() {
-    alert("success!");
-}
+	b.innerHTML = "2";
 
