@@ -49,9 +49,9 @@
         a.innerHTML="DEMO table: " + len + " rows found.";
         txt = "";
         for (var i=0; i<len; i++){
-           txt += "Row = " + i + " ID = " + results.rows.item(i).id + " Data =  " + results.rows.item(i).data) + "<br>";
+ //          txt += "Row = " + i + " ID = " + results.rows.item(i).id + " Data =  " + results.rows.item(i).data) + "<br>";
         }
-        b.innerHTML = txt;
+        b.innerHTML = 'txt';
     }
 
     // Transaction error callback
