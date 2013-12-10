@@ -22,6 +22,7 @@
     var b = document.getElementById("b");
     var c = document.getElementById("c");
 
+	c.innerHTML = "1";
     // Wait for Cordova to load
     //
     document.addEventListener("deviceready", onDeviceReady, false);
@@ -44,20 +45,19 @@
     // Query the success callback
     //
     function querySuccess(tx, results) {
-        a.innerHTML = results.rows.length;
-        // this will be true since it was a select statement and so rowsAffected was 0
-        if (!results.rowsAffected) {
-            a.innerHTML ='No rows affected!';
-            return false;
+        var len = results.rows.length;
+        a.innerHTML="DEMO table: " + len + " rows found.";
+        txt = "";
+        for (var i=0; i<len; i++){
+           txt += "Row = " + i + " ID = " + results.rows.item(i).id + " Data =  " + results.rows.item(i).data) + "<br>";
         }
-        // for an insert statement, this property will return the ID of the last inserted row
-       c.innerHTML = "Last inserted row ID = " + results.insertId;
+        b.innerHTML = txt;
     }
 
     // Transaction error callback
     //
     function errorCB(err) {
-        console.log("Error processing SQL: "+err.code);
+        alert("Error processing SQL: "+err.code);
     }
 
     // Transaction success callback
@@ -76,5 +76,5 @@
 
 
 
-	b.innerHTML = "2";
+	c.innerHTML = "2";
 
