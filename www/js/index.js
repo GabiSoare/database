@@ -27,13 +27,6 @@
     //
     document.addEventListener("deviceready", onDeviceReady, false);
 
-    // PhoneGap is ready
-    //
-    function onDeviceReady() {
-        var db = window.openDatabase("Food", "1.0", "Food", 200000);
-        db.transaction(populateDB, errorCB, successCB);
-    }
-
 
 
     // Populate the database 
@@ -72,11 +65,16 @@
     // Transaction success callback
     //
     function successCB() {
-        var db = window.openDatabase("Food", "1.0", "Food", 200000);
+        var db = window.openDatabase("Food", "1.0", "FoodDisplay", 100000);
         db.transaction(queryDB, errorCB);
     }
 
-
+    // PhoneGap is ready
+    //
+    function onDeviceReady() {
+        var db = window.openDatabase("Food", "1.0", "FoodDisplay", 100000);
+        db.transaction(populateDB, errorCB, successCB);
+    }
 
 
 	c.innerHTML = "6";
