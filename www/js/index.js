@@ -23,30 +23,39 @@
     var c = document.getElementById("c");
 
 	c.innerHTML = "1";
-    // Wait for Cordova to load
+    // Wait for PhoneGap to load
     //
     document.addEventListener("deviceready", onDeviceReady, false);
+
+    // PhoneGap is ready
+    //
+    function onDeviceReady() {
+        var db = window.openDatabase("Food", "1.0", "Food", 200000);
+        db.transaction(populateDB, errorCB, successCB);
+    }
+
+
 
     // Populate the database 
     //
     function populateDB(tx) {
-        tx.executeSql('DROP TABLE IF EXISTS DEMO');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id unique, data)');
-        tx.executeSql('INSERT INTO DEMO (id, data) VALUES (1, "First row")');
-        tx.executeSql('INSERT INTO DEMO (id, data) VALUES (2, "Second row")');
+//        tx.executeSql('DROP TABLE IF EXISTS DEMO');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS USDA (id unique, data)');
+        tx.executeSql('INSERT INTO USDA (id, data) VALUES (1, "First row")');
+        tx.executeSql('INSERT INTO USDA (id, data) VALUES (2, "Second row")');
     }
 
     // Query the database
     //
     function queryDB(tx) {
-        tx.executeSql('SELECT * FROM DEMO', [], querySuccess, errorCB);
+        tx.executeSql('SELECT * FROM USDA', [], querySuccess, errorCB);
     }
 
     // Query the success callback
     //
     function querySuccess(tx, results) {
         var len = results.rows.length;
-        a.innerHTML="DEMO table: " + len + " rows found.";
+        a.innerHTML="USDA table: " + len + " rows found.";
         txt = "";
         for (var i=0; i<len; i++){
            txt += "Row = " + i + " ID = " + results.rows.item(i).id + " Data =  " + results.rows.item(i).data + "<br>";
@@ -57,22 +66,16 @@
     // Transaction error callback
     //
     function errorCB(err) {
-        alert("Error processing SQL: "+err.code);
+        alert("Error processing Food database: "+err.code);
     }
 
     // Transaction success callback
     //
     function successCB() {
-        var db = window.openDatabase("Database", "1.0", "Cordova Demo", 200000);
+        var db = window.openDatabase("Food", "1.0", "Food", 200000);
         db.transaction(queryDB, errorCB);
     }
 
-    // Cordova is ready
-    //
-    function onDeviceReady() {
-        var db = window.openDatabase("Database", "1.0", "Cordova Demo", 200000);
-        db.transaction(populateDB, errorCB, successCB);
-    }
 
 
 
